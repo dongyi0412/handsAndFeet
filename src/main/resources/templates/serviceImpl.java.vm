@@ -1,0 +1,91 @@
+package $!{package.ServiceImpl};
+
+import $!{package.Entity}.$!{entity};
+import $!{package.Mapper}.$!{table.mapperName};
+import $!{package.Service}.$!{table.serviceName};
+#set($dto=$package.Entity.replace("entity","dto"))
+import $!{dto}.$!{entity}DTO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.plus.common.Condition;
+import com.plus.utils.BeanCopyUtils;
+import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.AllArgsConstructor;
+import cn.hutool.core.util.StrUtil;
+import java.util.List;
+
+/**
+ * $!{table.comment} 服务实现类
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+@Service
+@AllArgsConstructor
+public class $!{table.serviceImplName} implements $!{table.serviceName} {
+
+    protected $!{entity}Mapper $!{table.entityPath}Mapper;
+    @Override
+    public IPage<$!{entity}> page($!{entity}DTO dto) {
+        IPage<$!{entity}> page = Condition.getPage(dto);
+        QueryWrapper<$!{entity}> queryWrapper = Condition.getQueryWrapper(BeanCopyUtils.copy(dto, $!{entity}.class));
+        if (StrUtil.isNotEmpty(dto.getColumn()) && StrUtil.isNotEmpty(dto.getKeywords())) {
+        queryWrapper.like(dto.getColumn(),dto.getKeywords());
+        }
+        if (StrUtil.isNotEmpty(dto.getOrderAsc())) {
+        queryWrapper.orderByAsc(dto.getOrderAsc());
+        }
+        if (StrUtil.isNotEmpty(dto.getOrderDesc())) {
+        queryWrapper.orderByDesc(dto.getOrderDesc());
+        }
+        if (dto.getStartTime() != null) {
+        queryWrapper.gt("created",dto.getStartTime());
+        }
+        if (dto.getEndTime() != null) {
+        queryWrapper.lt("created",dto.getEndTime());
+        }
+        return $!{table.entityPath}Mapper.selectPage(page,queryWrapper);
+    }
+
+    @Override
+    public List<$!{entity}> list($!{entity}DTO dto) {
+        QueryWrapper<$!{entity}> queryWrapper = Condition.getQueryWrapper(BeanCopyUtils.copy(dto, $!{entity}.class));
+        if (StrUtil.isNotEmpty(dto.getColumn()) && StrUtil.isNotEmpty(dto.getKeywords())) {
+        queryWrapper.like(dto.getColumn(),dto.getKeywords());
+        }
+        if (StrUtil.isNotEmpty(dto.getOrderAsc())) {
+        queryWrapper.orderByAsc(dto.getOrderAsc());
+        }
+        if (StrUtil.isNotEmpty(dto.getOrderDesc())) {
+        queryWrapper.orderByDesc(dto.getOrderDesc());
+        }
+        if (dto.getStartTime() != null) {
+        queryWrapper.gt("created",dto.getStartTime());
+        }
+        if (dto.getEndTime() != null) {
+        queryWrapper.lt("created",dto.getEndTime());
+        }
+        return $!{table.entityPath}Mapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public Integer save($!{entity}DTO dto) {
+        return $!{table.entityPath}Mapper.insert(BeanCopyUtils.copy(dto,$!{entity}.class));
+    }
+
+    @Override
+    public Integer updateById($!{entity}DTO dto) {
+        return $!{table.entityPath}Mapper.updateById(BeanCopyUtils.copy(dto,$!{entity}.class));
+    }
+
+
+    @Override
+    public Integer deleteLogic(List<Integer> toIntList) {
+        return $!{table.entityPath}Mapper.deleteBatchIds(toIntList);
+    }
+
+    @Override
+    public $!{entity} getOne($!{entity}DTO dto) {
+        return $!{table.entityPath}Mapper.selectOne(Condition.getQueryWrapper(BeanCopyUtils.copy(dto,$!{entity}.class)));
+    }
+}

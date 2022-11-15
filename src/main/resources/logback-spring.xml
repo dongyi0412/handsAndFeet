@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <property name="LOG_HOME" value="logs/qa-center"/>
+    <property name="FILE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] [%level] [TxId:%X{PtxId},SpanId:%X{PspanId}] [%-22thread]  %logger{35}.%-5L - %msg %n"/>
+    <property name="WRITE_LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}] [%level] [TxId:%X{PtxId},SpanId:%X{PspanId}] %msg %n"/>
+
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %X{tl} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 出错日志 appender  -->
+    <appender name="SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/service.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/service.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 出错日志 appender  -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- warn日志 appender  -->
+    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/warn.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/warn.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- info日志 appender  -->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="INFOAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <appender-ref ref="INFO"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--    <appender name="requestAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--        <file>${LOG_HOME}/request.log</file>-->
+    <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+    <!--            <FileNamePattern>${LOG_HOME}/request-%d{yyyy-MM-dd}-%i.log-->
+    <!--            </FileNamePattern>-->
+    <!--            <timeBasedFileNamingAndTriggeringPolicy-->
+    <!--                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+    <!--                <maxFileSize>20480MB</maxFileSize>-->
+    <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+    <!--            <maxHistory>3</maxHistory>-->
+    <!--        </rollingPolicy>-->
+    <!--        <encoder class="com.yomahub.tlog.core.enhance.logback.AspectLogbackEncoder">-->
+    <!--            <pattern>[TxId:%X{PtxId},SpanId:%X{PspanId}] [%X{tl}] %m %n</pattern>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+
+    <!--    <appender name="requestAsync" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">-->
+    <!--        <includeCallerData>false</includeCallerData>-->
+    <!--        <appender-ref ref="requestAppender"/>-->
+    <!--    </appender>-->
+
+    <appender name="facadeAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/facade.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/facade-%d{yyyy-MM-dd}-%i.log.gz
+            </FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20480MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%level] [TxId:%X{PtxId},SpanId:%X{PspanId}] [%-22thread] %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="facadeAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>false</includeCallerData>
+        <appender-ref ref="facadeAppender"/>
+    </appender>
+
+    <appender name="cacheAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/cache.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/cache-%d{yyyy-MM-dd}-%i.log
+            </FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20480MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%level] [TxId:%X{PtxId},SpanId:%X{PspanId}] [%-22thread] %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="cacheAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>false</includeCallerData>
+        <appender-ref ref="cacheAppender"/>
+    </appender>
+
+    <!-- 写请求日志 appender  -->
+    <appender name="WRITE_LOG_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/write.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/write.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${WRITE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="WRITE_LOG_ASYNC_APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>false</includeCallerData>
+        <appender-ref ref="WRITE_LOG_APPENDER"/>
+    </appender>
+
+
+    <!-- info日志 appender  -->
+    <appender name="DUBBO-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/dubbo.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/dubbo.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MybatisSlowSql" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/mybatis_slow_sql.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/mybatis_slow_sql.log.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <!--    <logger name="request" level="INFO" additivity="false">-->
+    <!--        <appender-ref ref="requestAsync"/>-->
+    <!--    </logger>-->
+
+    <logger name="facade" level="INFO" additivity="false">
+        <appender-ref ref="facadeAsync"/>
+    </logger>
+
+    <logger name="cache" level="INFO" additivity="false">
+        <appender-ref ref="cacheAsync"/>
+    </logger>
+
+    <logger name="write_request" level="INFO" additivity="false">
+        <appender-ref ref="WRITE_LOG_ASYNC_APPENDER"/>
+    </logger>
+
+    <logger name="org.apache.dubbo" additivity="false" level="INFO">
+        <appender-ref ref="DUBBO-APPENDER"/>
+    </logger>
+
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" additivity="false">
+        <level value="error"/>
+        <appender-ref ref="MybatisSlowSql"/>
+    </logger>
+
+    <logger name="root" level="INFO">
+        <appender-ref ref="SERVICE"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="INFOAsync"/>
+        <appender-ref ref="WARN"/>
+    </logger>
+
+</configuration>

@@ -1,0 +1,28 @@
+package $!{package.Service};
+
+import $!{package.Entity}.$!{entity};
+#set($voPackage=$package.Entity.replace("entity","dto"))
+import $!{voPackage}.$!{entity}DTO;
+import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
+/**
+ * $!{table.comment} 服务类
+ *
+ * @author $!{author}
+ * @since $!{date}
+ */
+public interface $!{table.serviceName}  {
+
+        IPage<$!{entity}> page($!{entity}DTO dto) ;
+
+        List<$!{entity}> list($!{entity}DTO dto) ;
+
+        Integer save($!{entity}DTO dto) ;
+
+        Integer updateById($!{entity}DTO dto) ;
+
+        Integer deleteLogic(List<Integer> toIntList) ;
+
+        $!{entity} getOne($!{entity}DTO dto) ;
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plus.mapper.MockUrlMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="mockUrlResultMap" type="com.plus.entity.MockUrl">
+        <id column="id" property="id"/>
+        <result column="url" property="url"/>
+        <result column="url_name" property="urlName"/>
+        <result column="url_head" property="urlHead"/>
+        <result column="url_body" property="urlBody"/>
+        <result column="sleep_time" property="sleepTime"/>
+        <result column="description" property="description"/>
+        <result column="is_user_group" property="isUserGroup"/>
+        <result column="request_method" property="requestMethod"/>
+        <result column="author" property="author"/>
+        <result column="is_show" property="isShow"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+</mapper>
